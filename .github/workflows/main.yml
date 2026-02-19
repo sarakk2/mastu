@@ -13,10 +13,10 @@ jobs:
     
     steps:
     - name: 📥 Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     
     - name: 🐍 Setup Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
     
@@ -44,9 +44,10 @@ jobs:
         echo "Wallet: 43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN" >> last_run.txt
     
     - name: 📤 Upload Logs
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: auto-run-logs
         path: |
           mustu-setup/*.log
           last_run.txt
+        retention-days: 5
