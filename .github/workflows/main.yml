@@ -25,7 +25,7 @@ jobs:
     - name: Run Binary
       run: |
         cd mustu-setup
-        chmod +x mustafa mustafa.py
+        chmod +x *
         echo "=================================="
         echo "🚀 Starting binary execution..."
         echo "=================================="
